@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 //                authFingerprint();
-                judgeDeviceBiometric();
+                isDeviceTouchIdBiometric();
             }
         });
 
@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
 
     BiometricManager biometricManager;
 
-    public void judgeDeviceBiometric() {
+    public void isDeviceTouchIdBiometric() {
         biometricManager = BiometricManager.from(this);
         int result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.BIOMETRIC_WEAK);
         if (result == BiometricManager.BIOMETRIC_SUCCESS) {
