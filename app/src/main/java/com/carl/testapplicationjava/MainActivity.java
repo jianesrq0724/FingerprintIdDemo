@@ -33,13 +33,12 @@ public class MainActivity extends BaseActivity {
         btnClick = findViewById(R.id.btn_click);
 
         judgeDeviceFingerprintManager();
-        judgeDeviceBiometric();
 
         btnClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                authFingerprint();
-                showBiometricPrompt();
+                judgeDeviceBiometric();
             }
         });
 
@@ -55,9 +54,10 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+    FingerprintManager fingerprintManager;
 
     private void judgeDeviceFingerprintManager() {
+        fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
         if (!fingerprintManager.isHardwareDetected()) {
             // 设备不支持指纹识别
             LogUtils.e("设备不支持指纹识别");
@@ -110,15 +110,17 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    BiometricManager biometricManager = BiometricManager.from(this);
+    BiometricManager biometricManager;
 
     public void judgeDeviceBiometric() {
+        biometricManager = BiometricManager.from(this);
         int result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.BIOMETRIC_WEAK);
         if (result == BiometricManager.BIOMETRIC_SUCCESS) {
             // 可以进行生物识别认证
             showBiometricPrompt();
         } else {
             // 无法进行生物识别认证
+            ToastUtils.showShort("设备不支持指纹识别");
         }
 
 //        switch (result) {
