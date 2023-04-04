@@ -38,7 +38,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 //                authFingerprint();
-                isDeviceTouchIdBiometric();
+//                isDeviceTouchIdBiometric();
+
+                PatternLockActivity.startActivity(mContext);
             }
         });
 
