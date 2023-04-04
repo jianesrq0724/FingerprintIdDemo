@@ -59,35 +59,13 @@ public class PatternLockActivity extends BaseActivity {
             String currentPattern = PatternLockUtils.patternToString(mPatternLockView, pattern);
 
             if (isInitialSetup) {
-                if (firstPattern == null) {
-                    firstPattern = currentPattern;
-                    Toast.makeText(mContext, "请再次绘制手势密码", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (firstPattern.equals(currentPattern)) {
-                        Toast.makeText(mContext, "手势密码设置成功！", Toast.LENGTH_SHORT).show();
-                        isInitialSetup = false;
-                    } else {
-                        Toast.makeText(mContext, "手势密码不匹配，请重试！", Toast.LENGTH_SHORT).show();
-                    }
-                    firstPattern = null;
-                }
-
+                handleInitialSetup(currentPattern);
             } else {
-                // 此处为验证阶段，可以根据实际需求进行验证逻辑的实现
-                if (currentPattern.equals(firstPattern)) {
-                    Toast.makeText(mContext, "手势密码验证成功！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "手势密码错误，请重试！", Toast.LENGTH_SHORT).show();
-                }
+                handlePatternVerification(currentPattern);
             }
 
             // 延迟清除绘制的图案
-            mPatternLockView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mPatternLockView.clearPattern();
-                }
-            }, 1000);
+            mPatternLockView.postDelayed(() -> mPatternLockView.clearPattern(), 1000);
 
         }
 
@@ -95,6 +73,31 @@ public class PatternLockActivity extends BaseActivity {
         public void onCleared() {
             Log.d(getClass().getName(), "Pattern has been cleared");
         }
+
     };
+
+    private void handlePatternVerification(String currentPattern) {
+        // 此处为验证阶段，可以根据实际需求进行验证逻辑的实现
+        if (currentPattern.equals(firstPattern)) {
+            Toast.makeText(mContext, "手势密码验证成功！", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "手势密码错误，请重试！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleInitialSetup(String currentPattern) {
+        if (firstPattern == null) {
+            firstPattern = currentPattern;
+            Toast.makeText(mContext, "请再次绘制手势密码", Toast.LENGTH_SHORT).show();
+        } else {
+            if (firstPattern.equals(currentPattern)) {
+                Toast.makeText(mContext, "手势密码设置成功！", Toast.LENGTH_SHORT).show();
+                isInitialSetup = false;
+            } else {
+                Toast.makeText(mContext, "手势密码不匹配，请重试！", Toast.LENGTH_SHORT).show();
+            }
+            firstPattern = null;
+        }
+    }
 
 }
