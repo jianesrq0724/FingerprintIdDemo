@@ -18,6 +18,7 @@ import java.util.List;
 public class PatternLockActivity extends BaseActivity {
 
     private String firstPattern = null;
+    private boolean isInitialSetup = true;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context.getApplicationContext(), PatternLockActivity.class);
@@ -57,16 +58,27 @@ public class PatternLockActivity extends BaseActivity {
             // 当手势绘制完成时触发
             String currentPattern = PatternLockUtils.patternToString(mPatternLockView, pattern);
 
-            if (firstPattern == null) {
-                firstPattern = currentPattern;
-                Toast.makeText(mContext, "请再次绘制手势密码", Toast.LENGTH_SHORT).show();
+            if (isInitialSetup) {
+                if (firstPattern == null) {
+                    firstPattern = currentPattern;
+                    Toast.makeText(mContext, "请再次绘制手势密码", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (firstPattern.equals(currentPattern)) {
+                        Toast.makeText(mContext, "手势密码设置成功！", Toast.LENGTH_SHORT).show();
+                        isInitialSetup = false;
+                    } else {
+                        Toast.makeText(mContext, "手势密码不匹配，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                    firstPattern = null;
+                }
+
             } else {
-                if (firstPattern.equals(currentPattern)) {
+                // 此处为验证阶段，可以根据实际需求进行验证逻辑的实现
+                if (currentPattern.equals(firstPattern)) {
                     Toast.makeText(mContext, "手势密码验证成功！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(mContext, "手势密码不匹配，请重试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "手势密码错误，请重试！", Toast.LENGTH_SHORT).show();
                 }
-                firstPattern = null;
             }
 
             // 延迟清除绘制的图案
